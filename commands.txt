@@ -1,0 +1,45 @@
+## Run
+
+```bash
+# Default (command output → ./command_output.json)
+java -jar automation-cli-2.1.0-all.jar studio
+
+# Custom command output path
+java -jar automation-cli-2.1.0-all.jar studio --command-output /path/to/output.json
+```
+
+## API Endpoints
+
+All endpoints are at `http://localhost:<port>` (port shown on startup).
+
+### Navigate to URL
+```bash
+curl -X POST http://localhost:9999/api/open-url \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://www.airbnb.co.in/"}'
+```
+
+### Save Command (auto-triggered on element click)
+```bash
+curl -X POST http://localhost:9999/api/save-command \
+  -H "Content-Type: application/json" \
+  -d '{"command": "- tapOn:\n    id: \"element-id\"\n"}'
+```
+- Overwrites the file on every call (clears old content)
+- Default path: `./command_output.json`
+
+### Change Output File Path
+```bash
+curl -X POST http://localhost:9999/api/config \
+  -H "Content-Type: application/json" \
+  -d '{"commandOutputPath": "/custom/path/output.json"}'
+```
+
+## Workflow
+
+1. Start studio: `java -jar ... studio`
+2. Send URL: `POST /api/open-url` with target website
+3. Click any element on the fullscreen annotated view
+4. First tap command is auto-saved to `command_output.json`
+5. Click another element → file is cleared and rewritten with new command
+
